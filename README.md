@@ -8,10 +8,10 @@ ScholarPay is a production-grade decentralized payment platform designed to solv
 
 ## 🔗 Live Links
 
-- **Live Demo:** 
-- **Demo Video:** 
-- **User Feedback Form:** 
-- **User Feedback Sheet:** 
+- **Live Demo:** https://scholarpay-i6k5ff2p1-parasbabars-projects.vercel.app/
+- **Demo Video:** https://youtu.be/ctAeP_o7Pkw?si=4bHZp3fusDgoO_ib
+- **User Feedback Form:** https://docs.google.com/forms/d/e/1FAIpQLSd2AKkzq-s-9TFcw4uidQpK87NkyX69DGhg0cc4HbBB_llmxQ/viewform
+- **User Feedback Sheet:** https://docs.google.com/spreadsheets/d/1STeVZEM6hJJOdHTsZqqrTlWBRbLHWN-sw9BSSVon0j4/edit?usp=sharing
 - **GitHub Repository:** [https://github.com/parasbabar/scholarpay](https://github.com/parasbabar/scholarpay)
 - **Stellar Testnet Contract:** [`CAQWR6A4JQIPR5IVPIF47KB2TJQJYFC6IDXXUZ2DRMOFFE4PDONQ7RCQ`](https://stellar.expert/explorer/testnet/contract/CAQWR6A4JQIPR5IVPIF47KB2TJQJYFC6IDXXUZ2DRMOFFE4PDONQ7RCQ)
 
@@ -60,6 +60,17 @@ ScholarPay eliminates these inefficiencies:
 9. **Feedback Submission**: Users can rate their payment experience (1 to 5 stars) and submit qualitative feedback.
 
 ---
+
+📸 Screenshots
+<img width="1920" height="1080" alt="Screenshot 2026-08-29 184243" src="https://github.com/user-attachments/assets/0a21410d-f9e7-4d11-b1ee-7cc4634f0f33" />
+<img width="1920" height="1080" alt="Screenshot 2026-08-29 184333" src="https://github.com/user-attachments/assets/743ec05a-38a3-4383-9212-e0f19f4fa8b2" />
+<img width="1920" height="1080" alt="Screenshot 2026-08-29 184515" src="https://github.com/user-attachments/assets/302f7660-ddd4-40f8-b537-d02f3806f024" />
+<img width="1920" height="1080" alt="Screenshot 2026-08-29 184548" src="https://github.com/user-attachments/assets/ec1c334e-48ab-4862-85eb-6187a90a2e33" />
+<img width="1920" height="1080" alt="Screenshot 2026-08-29 184614" src="https://github.com/user-attachments/assets/28a03c4a-6bf4-427c-99bf-5a67873a4259" />
+<img width="720" height="1604" alt="WhatsApp Image 2026-08-29 at 21 44 30" src="https://github.com/user-attachments/assets/da83133f-ff0e-4124-878e-6ca3c751827f" />
+<img width="1920" height="1080" alt="Screenshot 2026-08-29 194739" src="https://github.com/user-attachments/assets/ad861127-f357-412a-b2c1-1ead2ce3928e" />
+<img width="1920" height="1080" alt="Screenshot 2026-08-29 203625" src="https://github.com/user-attachments/assets/a711afa9-60dd-4596-bdbe-a1c77f3caa47" />
+
 
 ## 🏗️ Architecture
 
