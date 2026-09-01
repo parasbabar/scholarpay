@@ -352,17 +352,25 @@ ScholarPay features automated GitHub Actions workflows located in `.github/workf
 | **CI** | [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) | Push & PR to `master` | Runs Rust format checks, Soroban contract unit tests, builds Soroban WASM artifact, runs Next.js linting (`npm run lint`), runs frontend unit/integration/Stellar on-chain tests, and executes Next.js production build (`npm run build`). |
 | **Deployment** | [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml) | Push to `master` / `workflow_dispatch` | Deploys Next.js application to Vercel production. Supports manual trigger (`workflow_dispatch`) to deploy Soroban contract WASM to Stellar Testnet. |
 
-### Required GitHub Secrets
+### Vercel Deployment
 
-Configure the following secrets under **Repository Settings > Secrets and variables > Actions**:
+The project contains a real Vercel deployment workflow ([`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)).
 
+Required GitHub Secrets:
 - **`VERCEL_TOKEN`**: Vercel Personal Access Token for automated frontend deployment.
   - *How to obtain:* Go to [Vercel Account Tokens](https://vercel.com/account/tokens) -> Click **Create Token** -> Copy the generated token string.
 - **`VERCEL_ORG_ID`**: Vercel Organization / Team ID.
   - *How to obtain:* In your Vercel Dashboard, go to **Team Settings -> General** (or check `orgId` in `.vercel/project.json` after running `npx vercel link`).
 - **`VERCEL_PROJECT_ID`**: Vercel Project ID.
   - *How to obtain:* In your Vercel Dashboard, open your project -> **Settings -> General** -> Copy **Project ID** (`prj_...`).
-- **`STELLAR_SECRET_KEY`**: *(Optional for manual contract deployment)* Stellar Testnet secret key (`S...`) for smart contract deployment.
+
+If these secrets are not configured, the Vercel deployment job is skipped safely without causing workflow failure. Once the secrets are configured in GitHub Settings -> Secrets and variables -> Actions, pushing to `master` or manually running the deployment workflow performs the real Vercel deployment automatically.
+
+### Stellar Smart Contract Deployment
+
+Stellar Testnet smart contract deployment is kept as a separate manual workflow step (`workflow_dispatch`).
+- **`STELLAR_SECRET_KEY`**: Stellar Testnet secret key (`S...`) used to sign contract deployment transactions on Testnet.
+
 
 
 ### Viewing Workflow Results
