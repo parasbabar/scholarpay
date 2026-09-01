@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    name: Rust / Soroban Smart Contract
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: clippy, rustfmt
+
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: contracts/scholarpay
+
+      - name: Check Rust formatting
+        run: cargo fmt --check --manifest-path contracts/scholarpay/Cargo.toml
+
+      - name: Run Soroban contract tests
+        run: cargo test --manifest-path contracts/scholarpay/Cargo.toml
+
+      - name: Build Soroban smart contract WASM
+        run: cargo build --manifest-path contracts/scholarpay/Cargo.toml --target wasm32-unknown-unknown --release
+
+      - name: Verify WASM artifact existence
+        run: |
+          test -f contracts/scholarpay/target/wasm32-unknown-unknown/release/scholarpay.wasm
+          echo "WASM binary compiled successfully!"
+
+      - name: Upload contract WASM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scholarpay-contract-wasm
+          path: contracts/scholarpay/target/wasm32-unknown-unknown/release/scholarpay.wasm
+          if-no-files-found: error
+
+  frontend:
+    name: Next.js Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: node scripts/prisma-generate.js
+        env:
+          DATABASE_URL: "file:./dev.db"
+
+      - name: Run ESLint check
+        run: npm run lint
+
+      - name: Run validation unit tests
+        run: npx tsx tests/validation.test.ts
+
+      - name: Run auth & database tests
+        run: npx tsx tests/auth.test.ts
+        env:
+          DATABASE_URL: "file:./dev.db"
+          JWT_SECRET: "ci-testing-super-secret-jwt-signing-key-min-32-chars"
+
+      - name: Run Stellar on-chain tests
+        run: npx tsx tests/stellar.test.ts
+        env:
+          NEXT_PUBLIC_STELLAR_NETWORK: "TESTNET"
+          NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
+          NEXT_PUBLIC_STELLAR_HORIZON_URL: "https://horizon-testnet.stellar.org"
+          NEXT_PUBLIC_STELLAR_RPC_URL: "https://soroban-testnet.stellar.org"
+          NEXT_PUBLIC_SOROBAN_CONTRACT_ID: "CAQWR6A4JQIPR5IVPIF47KB2TJQJYFC6IDXXUZ2DRMOFFE4PDONQ7RCQ"
+
+      - name: Build Next.js application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_APP_URL: "https://scholarpay.vercel.app"
+          NEXT_PUBLIC_STELLAR_NETWORK: "TESTNET"
+          NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
+          NEXT_PUBLIC_STELLAR_HORIZON_URL: "https://horizon-testnet.stellar.org"
+          NEXT_PUBLIC_STELLAR_RPC_URL: "https://soroban-testnet.stellar.org"
+          NEXT_PUBLIC_SOROBAN_CONTRACT_ID: "CAQWR6A4JQIPR5IVPIF47KB2TJQJYFC6IDXXUZ2DRMOFFE4PDONQ7RCQ"
+          DATABASE_URL: "file:./dev.db"
+          JWT_SECRET: "ci-testing-super-secret-jwt-signing-key-min-32-chars"

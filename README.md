@@ -1,5 +1,8 @@
 # ScholarPay
 
+[![CI Pipeline](https://github.com/parasbabar/scholarpay/actions/workflows/ci.yml/badge.svg)](https://github.com/parasbabar/scholarpay/actions/workflows/ci.yml)
+[![Deployment Pipeline](https://github.com/parasbabar/scholarpay/actions/workflows/deploy.yml/badge.svg)](https://github.com/parasbabar/scholarpay/actions/workflows/deploy.yml)
+
 > **Stellar-powered cross-border student payment platform built on Soroban smart contracts.**
 
 ScholarPay is a production-grade decentralized payment platform designed to solve international tuition and living expense remittance challenges for students studying abroad. By leveraging the **Stellar Network** and **Soroban Smart Contracts**, ScholarPay replaces slow, high-fee SWIFT bank transfers with near-instant, low-cost, and transparent on-chain transactions.
@@ -335,6 +338,32 @@ npx tsx tests/stellar.test.ts
 - `npm run build`: Production build passes cleanly with 21 static & dynamic routes generated.
 - `validation.test.ts`: 10/10 unit tests passed.
 - `stellar.test.ts`: 5/5 on-chain tests passed against live Stellar Testnet RPC.
+
+---
+
+## 🔄 CI/CD Pipelines
+
+ScholarPay features automated GitHub Actions workflows located in `.github/workflows/`:
+
+### Workflows Overview
+
+| Workflow | Path | Trigger | Description |
+|---|---|---|---|
+| **CI** | [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) | Push & PR to `master` | Runs Rust format checks, Soroban contract unit tests, builds Soroban WASM artifact, runs Next.js linting (`npm run lint`), runs frontend unit/integration/Stellar on-chain tests, and executes Next.js production build (`npm run build`). |
+| **Deployment** | [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml) | Push to `master` / `workflow_dispatch` | Deploys Next.js application to Vercel production. Supports manual trigger (`workflow_dispatch`) to deploy Soroban contract WASM to Stellar Testnet. |
+
+### Required GitHub Secrets
+
+Configure the following secrets under **Repository Settings > Secrets and variables > Actions**:
+
+- **`VERCEL_TOKEN`**: Vercel Personal Access Token for automated frontend deployment.
+- **`VERCEL_ORG_ID`**: Vercel Organization ID.
+- **`VERCEL_PROJECT_ID`**: Vercel Project ID.
+- **`STELLAR_SECRET_KEY`**: *(Optional for manual contract deployment)* Stellar Testnet secret key (`S...`) for smart contract deployment.
+
+### Viewing Workflow Results
+
+Navigate to the **Actions** tab of the GitHub repository ([https://github.com/parasbabar/scholarpay/actions](https://github.com/parasbabar/scholarpay/actions)) to inspect live build logs, test results, and compiled contract artifacts (`scholarpay-contract-wasm`).
 
 ---
 
