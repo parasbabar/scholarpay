@@ -357,9 +357,13 @@ ScholarPay features automated GitHub Actions workflows located in `.github/workf
 Configure the following secrets under **Repository Settings > Secrets and variables > Actions**:
 
 - **`VERCEL_TOKEN`**: Vercel Personal Access Token for automated frontend deployment.
-- **`VERCEL_ORG_ID`**: Vercel Organization ID.
+  - *How to obtain:* Go to [Vercel Account Tokens](https://vercel.com/account/tokens) -> Click **Create Token** -> Copy the generated token string.
+- **`VERCEL_ORG_ID`**: Vercel Organization / Team ID.
+  - *How to obtain:* In your Vercel Dashboard, go to **Team Settings -> General** (or check `orgId` in `.vercel/project.json` after running `npx vercel link`).
 - **`VERCEL_PROJECT_ID`**: Vercel Project ID.
+  - *How to obtain:* In your Vercel Dashboard, open your project -> **Settings -> General** -> Copy **Project ID** (`prj_...`).
 - **`STELLAR_SECRET_KEY`**: *(Optional for manual contract deployment)* Stellar Testnet secret key (`S...`) for smart contract deployment.
+
 
 ### Viewing Workflow Results
 
