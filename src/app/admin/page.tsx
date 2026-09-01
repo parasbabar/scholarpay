@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useEffect, useState, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
-  BarChart3, Users, FileText, CheckCircle, AlertTriangle, Star, Zap,
-  RefreshCw, Shield, ArrowLeft,
+  Users, FileText, CheckCircle, Star, Zap, RefreshCw,
 } from "lucide-react";
 
 interface AdminStats {
@@ -31,8 +29,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const loadStats = async () => {
-    setLoading(true);
+  const loadStats = useCallback(async () => {
     setError("");
     try {
       const res = await fetch("/api/admin/stats");
@@ -48,11 +45,14 @@ export default function AdminPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadStats();
-  }, []);
+    queueMicrotask(() => {
+      loadStats();
+    });
+  }, [loadStats]);
+
 
   return (
     <>
@@ -69,7 +69,7 @@ export default function AdminPage() {
           </div>
 
           <button
-            onClick={loadStats}
+            onClick={() => { setLoading(true); loadStats(); }}
             disabled={loading}
             className="btn-secondary text-sm py-2 px-4"
           >

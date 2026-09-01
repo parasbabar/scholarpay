@@ -17,7 +17,7 @@ async function main() {
   let pass = 0, fail = 0;
   const report = (label, ok, extra) => {
     console.log((ok ? 'PASS' : 'FAIL') + ': ' + label + (extra ? ' — ' + extra : ''));
-    ok ? pass++ : fail++;
+    if (ok) { pass++; } else { fail++; }
   };
 
   try {

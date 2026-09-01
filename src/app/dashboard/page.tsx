@@ -8,7 +8,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
   FileText, Plus, CheckCircle, Clock, AlertTriangle, ExternalLink, Copy,
-  Check, Wallet, RefreshCw, GraduationCap, DollarSign, Send, Zap, LogOut,
+  Check, RefreshCw, DollarSign, Zap, LogOut,
 } from "lucide-react";
 import { shortenAddress, isValidStellarAddress } from "@/lib/stellar";
 import { formatErrorMessage } from "@/lib/utils";
@@ -57,15 +57,16 @@ export default function DashboardPage() {
     }
   }, [user, loading, router]);
 
-  // Pre-fill recipient address with user's saved wallet
+  // Pre-fill recipient address with user's saved wallet if empty
   useEffect(() => {
     if (user?.walletAddress) {
-      setForm((prev) => ({ ...prev, recipientAddress: user.walletAddress || "" }));
+      queueMicrotask(() => {
+        setForm((prev) => (prev.recipientAddress ? prev : { ...prev, recipientAddress: user.walletAddress || "" }));
+      });
     }
-  }, [user]);
+  }, [user?.walletAddress]);
 
   const fetchRequests = useCallback(async () => {
-    setFetching(true);
     try {
       const res = await fetch("/api/requests");
       if (res.ok) {
@@ -81,9 +82,12 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (user) {
-      fetchRequests();
+      queueMicrotask(() => {
+        fetchRequests();
+      });
     }
   }, [user, fetchRequests]);
+
 
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -338,8 +342,9 @@ export default function DashboardPage() {
                     placeholder="G..."
                   />
                   <p className="text-[10px] text-[var(--color-muted)] mt-1">
-                    Must start with 'G' (Stellar public key). Sender will transfer funds to this address.
+                    Must start with &apos;G&apos; (Stellar public key). Sender will transfer funds to this address.
                   </p>
+
                 </div>
 
                 <div>

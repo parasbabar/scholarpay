@@ -1,5 +1,5 @@
-require("dotenv").config();
-const { execSync } = require("child_process");
+import "dotenv/config";
+import { execSync } from "child_process";
 
 const dbUrl = process.env.DATABASE_URL || "";
 const isPg = dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://") || process.env.VERCEL;

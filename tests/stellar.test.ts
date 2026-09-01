@@ -55,8 +55,8 @@ async function runStellarOnChainTests() {
       !invalidVerification.valid,
       "Transaction verifier correctly rejects fake or non-existent transaction hash"
     );
-  } catch (err: any) {
-    console.error("Stellar test exception:", err?.message || err);
+  } catch (err: unknown) {
+    console.error("Stellar test exception:", (err as Error)?.message || err);
     failed++;
   }
 

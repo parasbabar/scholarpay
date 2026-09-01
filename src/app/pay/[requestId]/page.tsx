@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, use, useCallback } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
-  GraduationCap, Wallet, CheckCircle, Clock, AlertTriangle, ExternalLink,
-  ArrowRight, Shield, Zap, RefreshCw, Copy, Check, DollarSign,
+  Wallet, CheckCircle, AlertTriangle, ExternalLink,
+  ArrowRight, Shield, Zap,
 } from "lucide-react";
 import { shortenAddress, isValidStellarAddress, prepareXLMPaymentTransaction, CONTRACT_ID, STELLAR_NETWORK_PASSPHRASE } from "@/lib/stellar";
 import { isConnected, requestAccess, signTransaction } from "@stellar/freighter-api";
@@ -54,8 +54,7 @@ export default function PaymentRequestPage({ params }: { params: Promise<{ reque
   const [confirmedPaymentId, setConfirmedPaymentId] = useState("");
 
   // Load payment request data
-  const loadRequest = async () => {
-    setLoading(true);
+  const loadRequest = useCallback(async () => {
     setError("");
     try {
       const res = await fetch(`/api/requests/${requestId}`);
@@ -72,16 +71,18 @@ export default function PaymentRequestPage({ params }: { params: Promise<{ reque
           }
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(formatErrorMessage(err, "Failed to load payment request."));
     } finally {
       setLoading(false);
     }
-  };
+  }, [requestId]);
 
   useEffect(() => {
-    loadRequest();
-  }, [requestId]);
+    queueMicrotask(() => {
+      loadRequest();
+    });
+  }, [loadRequest]);
 
   // Connect Freighter wallet
   const connectFreighter = async () => {
@@ -104,7 +105,7 @@ export default function PaymentRequestPage({ params }: { params: Promise<{ reque
         setStep("REVIEW");
         analytics.trackWalletConnected("freighter", access.address);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       const safeMsg = formatErrorMessage(err, "Failed to connect Freighter wallet.");
       setWalletErr(safeMsg);
       monitoring.captureException(err, { context: "connectFreighter" });
@@ -126,13 +127,14 @@ export default function PaymentRequestPage({ params }: { params: Promise<{ reque
         setStep("REVIEW");
         analytics.trackWalletConnected("albedo", res.pubkey);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       const safeMsg = formatErrorMessage(err, "Albedo connection rejected or closed.");
       setWalletErr(safeMsg);
     } finally {
       setConnecting(false);
     }
   };
+
 
   // Connect manual address
   const connectManual = () => {
@@ -253,7 +255,7 @@ export default function PaymentRequestPage({ params }: { params: Promise<{ reque
         setReq({ ...req, status: "CONFIRMED" });
         analytics.trackTransactionConfirmed(req.id, hash, parseFloat(req.amount));
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setStep("FAILED");
       const safeMsg = formatErrorMessage(err, "Payment process encountered an error.");
       setWalletErr(safeMsg);
