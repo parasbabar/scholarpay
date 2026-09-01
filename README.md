@@ -384,7 +384,7 @@ scholarpay/
 │   ├── schema.prisma            # SQLite schema (Local Dev)
 │   └── schema.postgresql.prisma # PostgreSQL schema (Production)
 ├── scripts/
-│   └── prisma-generate.js       # Dynamic Prisma generator script
+│   └── prisma-generate.mjs      # Dynamic Prisma generator script
 ├── src/
 │   ├── app/                     # Next.js App Router pages & API endpoints
 │   │   ├── admin/               # Admin dashboard page

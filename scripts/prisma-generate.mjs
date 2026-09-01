@@ -10,4 +10,5 @@ if (isPg) {
   execSync("npx prisma generate --config prisma.pg.config.ts", { stdio: "inherit" });
 } else {
   execSync("npx prisma generate --config prisma7.config.ts", { stdio: "inherit" });
+  execSync("npx prisma db push --config prisma7.config.ts", { stdio: "inherit" });
 }
